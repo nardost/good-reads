@@ -10,6 +10,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class Author {
+    private String id;
     private String path;
     private String name;
 }
