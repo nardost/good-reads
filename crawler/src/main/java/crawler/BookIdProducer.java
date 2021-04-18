@@ -12,7 +12,6 @@ import java.util.Objects;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static crawler.Utils.THREAD_NAME_COL_WIDTH;
 import static crawler.Utils.log;
 
 @AllArgsConstructor
