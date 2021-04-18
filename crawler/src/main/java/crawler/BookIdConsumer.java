@@ -7,17 +7,16 @@ import org.jsoup.nodes.Document;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static crawler.Configuration.bookUrl;
+import static crawler.Utils.*;
 
 @AllArgsConstructor
-public class BookCrawler implements Runnable {
+public class BookIdConsumer implements Runnable {
 
     private final Map<String, List<Book>> books;
     private final BlockingQueue<Book> queue;
@@ -29,22 +28,17 @@ public class BookCrawler implements Runnable {
         while(!cancel.get()) {
             try {
                 final Book book = queue.take();
-                System.out.printf("%s: Trying to get details for book %s%n", Thread.currentThread().getName(), book.getId());
-                final Connection connection = Jsoup.connect(bookUrl + "/" + book.getId());
+                log("Trying to get details for book " + book.getId());
+                final Connection connection = Jsoup.connect("https://www.goodreads.com/book/show/" + book.getId());
                 connection.ignoreHttpErrors(true);
                 if (connection.execute().statusCode() == 200) {
-                    final String element = "div#topcol";
-                    final String title = "div#topcol h1#bookTitle";
-                    final String thumbnail = "div#topcol div#imagecol div.bookCoverPrimary img#coverImage";
-                    final String blurb = "div#topcol div#description span#freeText";
-                    final String blurbId = "div#topcol div#description a";
                     final Document document = connection.get();
                     if (Objects.nonNull(document)) {
-                        document.select(element).forEach(e -> {
-                            book.setTitle(e.select(title).text());
-                            book.setThumbnail(e.select(thumbnail).attr("src"));
-                            final String dataTextId = e.select(blurbId).attr("data-text-id");
-                            book.setBlurb(e.select(blurb + dataTextId).text());
+                        document.select("div#topcol").forEach(e -> {
+                            book.setTitle(e.select("div#topcol h1#bookTitle").text());
+                            book.setThumbnail(e.select("div#topcol div#imagecol div.bookCoverPrimary img#coverImage").attr("src"));
+                            final String dataTextId = e.select("div#topcol div#description a").attr("data-text-id");
+                            book.setBlurb(e.select("div#topcol div#description span#freeText" + dataTextId).text());
                         });
                         final String key = book.getGenres().isEmpty() ? "unknown-genre" : book.getGenres().get(0);
                         if(Objects.nonNull(books.get(key))) {
@@ -54,18 +48,18 @@ public class BookCrawler implements Runnable {
                             booksInGenre.add(book);
                             books.put(key, booksInGenre);
                         }
-                        System.out.printf("%s: Got details for %s%n", Thread.currentThread().getName(), book.getId());
+                        log("Got details for book " + book.getId());
                     }
                 } else {
                     cancel.set(forbiddenCount++ == 5);
                     if(cancel.get()) {
                         queue.drainTo(new ArrayList<>());
-                        System.out.printf("%s: Aborting... Program is throttled.%n", Thread.currentThread().getName());
+                        log("Aborting... Remote is throttling requests.");
                     }
                 }
             } catch (IOException | InterruptedException ignored) {
             }
         }
-        System.out.printf("%s: Consumer thread terminating...%n", Thread.currentThread().getName());
+        log("Consumer thread terminating");
     }
 }

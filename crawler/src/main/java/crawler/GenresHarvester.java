@@ -9,14 +9,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static crawler.Configuration.*;
+public class GenresHarvester {
 
-public class Genres {
-
-    static List<String> getGenres(final int startPage, final int finishPage) {
+    static List<String> getAllGenres() {
+        final int startPage = 1;
+        final int finishPage = 14;
         final List<String> genres = new ArrayList<>();
         for(int page = startPage; page <= finishPage; page++) {
-            final Connection connection = Jsoup.connect(genresUrl + "?page=" + page);
+            final Connection connection = Jsoup.connect("https://www.goodreads.com/genres/list?page=" + page);
             connection.ignoreHttpErrors(true);
             final String querySelector = "div.shelfStat div a.mediumText";
             try {
