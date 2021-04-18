@@ -39,3 +39,6 @@ bin/
 
 ### VS Code ###
 .vscode/
+
+### Specific to this Project
+GOOD_READS_DATA/
