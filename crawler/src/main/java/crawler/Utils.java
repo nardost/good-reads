@@ -8,6 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -17,14 +18,25 @@ import static java.nio.file.StandardOpenOption.WRITE;
 
 public class Utils {
 
-    private static final Gson gson = new Gson();
-    private static final Path dataDir = Path.of("GOOD_READS_DATA").toAbsolutePath();
+    /**
+     * Global constants
+     */
     public static final long PROGRAM_START_TIME = System.currentTimeMillis();
-    public static int THREAD_NAME_COL_WIDTH = 15;
+    public static final int THREAD_NAME_COL_WIDTH = 15;
+    public static final String DATA_DIR = "GOOD_READS_DATA";
 
     public static void writeJsonFile(final String fileName, List<?> booksInGenre) {
-        final String uniqueFileName = fileName + "_" + UUID.randomUUID().toString().toLowerCase() + ".json";
+        final StringBuilder uniqueFileName = new StringBuilder();
+        uniqueFileName.append(fileName)
+                .append("_")
+                .append(UUID.randomUUID()
+                                .toString()
+                                .toLowerCase()
+                                .replace("-", ""))
+                .append(".json");
         try {
+            final Gson gson = new Gson();
+            final Path dataDir = Path.of(DATA_DIR).toAbsolutePath();
             final Path path = Paths.get(dataDir + File.separator + uniqueFileName);
             if(!Files.exists(dataDir)) {
                 Files.createDirectory(dataDir);

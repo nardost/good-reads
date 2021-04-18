@@ -12,6 +12,7 @@ import java.util.Objects;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import static crawler.Utils.THREAD_NAME_COL_WIDTH;
 import static crawler.Utils.log;
 
 @AllArgsConstructor
@@ -23,7 +24,6 @@ public class BookIdProducer implements Runnable {
 
     @Override
     public void run() {
-        Thread.currentThread().setName(genre);
         final Connection connection = Jsoup.connect("https://www.goodreads.com/shelf/show/" + genre);
         connection.ignoreHttpErrors(true);
         try {

@@ -22,6 +22,11 @@ public class BookIdConsumer implements Runnable {
     private final BlockingQueue<Book> queue;
     private final AtomicBoolean cancel;
 
+    /**
+     * Max number of forbidden requests before aborting.
+     */
+    private static final int MAX_FORBIDDEN = 5;
+
     @Override
     public void run() {
         int forbiddenCount = 0;
@@ -51,7 +56,7 @@ public class BookIdConsumer implements Runnable {
                         log("Got details for book " + book.getId());
                     }
                 } else {
-                    cancel.set(forbiddenCount++ == 5);
+                    cancel.set(forbiddenCount++ == MAX_FORBIDDEN);
                     if(cancel.get()) {
                         queue.drainTo(new ArrayList<>());
                         log("Aborting... Remote is throttling requests.");
