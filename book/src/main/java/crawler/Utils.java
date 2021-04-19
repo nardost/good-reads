@@ -38,7 +38,7 @@ public class Utils {
             final Path dataDir = Path.of(DATA_STORE + File.separator + "books").toAbsolutePath();
             final Path path = Paths.get(dataDir + File.separator + uniqueFileName);
             if(!Files.exists(dataDir)) {
-                Files.createDirectory(dataDir);
+                Files.createDirectories(dataDir);
             }
             Files.writeString(path, gson.toJson(booksInGenre), CREATE, WRITE, APPEND);
         } catch (IOException ignored) {

@@ -17,7 +17,7 @@ public class ThumbnailGetter {
         final URL url = new URL(thumbnail);
         final Path thumbnailsDir = Path.of(DATA_STORE + File.separator + "thumbnails").toAbsolutePath();
         if(!Files.exists(thumbnailsDir)) {
-            Files.createDirectory(thumbnailsDir);
+            Files.createDirectories(thumbnailsDir);
         }
         final Path thumbnailPath = Path.of(thumbnailsDir + File.separator + id + ".jpg").toAbsolutePath();
         final ReadableByteChannel readableByteChannel = Channels.newChannel(url.openStream());
