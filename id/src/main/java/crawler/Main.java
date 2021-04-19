@@ -1,4 +1,6 @@
-package crawler.id;
+package crawler;
+
+import crawler.id.IdHarvester;
 
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListSet;

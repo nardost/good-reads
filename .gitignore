@@ -42,3 +42,8 @@ bin/
 
 ### Specific to this Project
 GOOD_READS_DATA/
+
+### Exclude unused modules
+id/
+genre/
+legacy/
