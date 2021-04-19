@@ -105,12 +105,12 @@ public class BookIdConsumer implements Runnable {
 
                 final Set<String> genres = new HashSet<>();
                 final Element r = document.selectFirst("div.rightContainer");
-                //type should be Genres
-                final String type = r.select("div.stacked h2 a").text();
-                r.select("div.elementList")
-                        .forEach(e -> e.select("div.left a")
-                                .forEach(a -> genres.add(a.text())));
-                book.setGenres(genres);
+                if("Genres".equals(r.select("div.stacked h2 a").text())) {
+                    r.select("div.elementList")
+                            .forEach(e -> e.select("div.left a")
+                                    .forEach(a -> genres.add(a.text())));
+                    book.setGenres(genres);
+                }
             }
         } catch (IOException ignored) {
         }

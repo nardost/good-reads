@@ -44,13 +44,7 @@ public class Worker implements Runnable {
                 if(Objects.nonNull(document)) {
                     document.select("div.elementList").forEach(e -> {
                         final String id = e.select("div.elementList div.stars").attr("data-resource-id");
-                        if(id.matches("\\d+") &&
-                                !alreadyHarvestedIds1.containsKey(id) &&
-                                !alreadyHarvestedIds2.containsKey(id) &&
-                                !alreadyHarvestedIds3.containsKey(id) &&
-                                !alreadyHarvestedIds4.containsKey(id) &&
-                                !alreadyHarvestedIds5.containsKey(id) &&
-                                !alreadyHarvestedIds6.containsKey(id)) {
+                        if(id.matches("\\d+") && isNotHarvestedYet(id)) {
                             ids.add(id);
                             count.getAndIncrement();
                         }
@@ -61,5 +55,14 @@ public class Worker implements Runnable {
         });
         log(count.get() + " ids harvested");
         done.countDown();
+    }
+
+    private boolean isNotHarvestedYet(final String id) {
+        return !alreadyHarvestedIds1.containsKey(id) &&
+                !alreadyHarvestedIds2.containsKey(id) &&
+                !alreadyHarvestedIds3.containsKey(id) &&
+                !alreadyHarvestedIds4.containsKey(id) &&
+                !alreadyHarvestedIds5.containsKey(id) &&
+                !alreadyHarvestedIds6.containsKey(id);
     }
 }
