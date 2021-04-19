@@ -12,9 +12,9 @@ import java.util.concurrent.BlockingQueue;
 import java.util.stream.IntStream;
 
 import static crawler.Utils.log;
-import static crawler.book.Parameters.POISON_PILL;
-import static crawler.book.Parameters.idStreamLimit;
-import static crawler.book.Parameters.numberOfDownloaders;
+import static crawler.Parameters.POISON_PILL;
+import static crawler.Parameters.idStreamLimit;
+import static crawler.Parameters.numberOfDownloaders;
 
 public class BookIdSource implements Runnable {
 

@@ -16,7 +16,7 @@ import java.util.stream.IntStream;
 
 import static crawler.Utils.log;
 import static crawler.Utils.writeJsonFile;
-import static crawler.book.Parameters.*;
+import static crawler.Parameters.*;
 
 public class GoodReadsCrawlerApplication {
 

@@ -1,4 +1,4 @@
-package crawler.book;
+package crawler;
 
 public class Parameters {
     public static final String POISON_PILL = "0";

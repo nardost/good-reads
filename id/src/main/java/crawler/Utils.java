@@ -11,7 +11,7 @@ import java.util.Collection;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-import static crawler.book.Parameters.DATA_STORE;
+import static crawler.Parameters.DATA_STORE;
 import static java.nio.file.StandardOpenOption.APPEND;
 import static java.nio.file.StandardOpenOption.CREATE;
 import static java.nio.file.StandardOpenOption.WRITE;
@@ -29,9 +29,9 @@ public class Utils {
         uniqueFileName.append(fileName)
                 .append("_")
                 .append(UUID.randomUUID()
-                                .toString()
-                                .toLowerCase()
-                                .replace("-", ""))
+                        .toString()
+                        .toLowerCase()
+                        .replace("-", ""))
                 .append(".json");
         try {
             final Gson gson = new Gson();

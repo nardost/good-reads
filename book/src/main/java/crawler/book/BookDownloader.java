@@ -11,8 +11,8 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static crawler.Utils.log;
-import static crawler.book.Parameters.POISON_PILL;
-import static crawler.book.Parameters.maxTolerableHttpError;
+import static crawler.Parameters.POISON_PILL;
+import static crawler.Parameters.maxTolerableHttpError;
 
 @AllArgsConstructor
 public class BookDownloader implements Runnable {

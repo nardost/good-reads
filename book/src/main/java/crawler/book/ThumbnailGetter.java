@@ -10,7 +10,7 @@ import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import static crawler.book.Parameters.DATA_STORE;
+import static crawler.Parameters.DATA_STORE;
 
 public class ThumbnailGetter {
     public static void downloadThumbnail(final String thumbnail, final String id) throws IOException {

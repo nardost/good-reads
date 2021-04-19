@@ -1,2 +1,3 @@
-rootProject.name = 'good-reads-scrapper'
-include 'crawler'
+rootProject.name = 'good-reads-scraper'
+include 'book'
+

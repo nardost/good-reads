@@ -1,4 +1,4 @@
-package crawler.book;
+package crawler.legacy;
 
 import crawler.Book;
 
