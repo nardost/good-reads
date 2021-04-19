@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import static crawler.Utils.log;
 import static crawler.Utils.writeJsonFile;
 
 public class IdShuffler {
@@ -40,18 +41,22 @@ public class IdShuffler {
             "harvested-ids/ids_debb69f3c8694c2e9a1c797ea50d29c1.json",
             "harvested-ids/ids_e58a48714f6641adbf58a1fe16bbd4f7.json"
     };
+
     public static void main(String[] args) {
         final IdShuffler shuffler = new IdShuffler();
         final Set<String> ids = new HashSet<>();
         Stream.of(idFiles).map(shuffler::getIdsFromFile).forEach(ids::addAll);
-        System.out.println(ids.size());
         final List<String> list = new ArrayList<>(ids);
         Collections.shuffle(list);
-        final Map<Integer, List<String>> groups = list.stream().collect(Collectors.groupingBy(id -> Integer.parseInt(id) % 6));
-        final List<List<String>> partitions = new ArrayList<>(groups.values());
+
         final String[] members = new String[] { "lisa", "kyle", "jared", "david", "christian", "nardos" };
-        IntStream.range(0, 6).forEach(i -> writeJsonFile(members[i], partitions.get(i)));
+        final int n = members.length;
+        final Map<Integer, List<String>> groups = list.stream().collect(Collectors.groupingBy(id -> Integer.parseInt(id) % n));
+        final List<List<String>> partitions = new ArrayList<>(groups.values());
+        IntStream.range(0, n).forEach(i -> writeJsonFile(members[i], partitions.get(i)));
+        log("Number of Ids: " + partitions.stream().map(List::size).reduce(0, Integer::sum));
     }
+
     private Set<String> getIdsFromFile(final String fileName) {
         Set<String> ids = new HashSet<>();
         final InputStream inputStream = getClass().getClassLoader().getResourceAsStream(fileName);
