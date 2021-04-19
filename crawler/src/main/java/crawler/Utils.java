@@ -8,10 +8,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collection;
-import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+import static crawler.book.Parameters.DATA_STORE;
 import static java.nio.file.StandardOpenOption.APPEND;
 import static java.nio.file.StandardOpenOption.CREATE;
 import static java.nio.file.StandardOpenOption.WRITE;
@@ -23,7 +23,6 @@ public class Utils {
      */
     public static final long PROGRAM_START_TIME = System.currentTimeMillis();
     public static final int THREAD_NAME_COL_WIDTH = 15;
-    public static final String DATA_DIR = "GOOD_READS_DATA";
 
     public static void writeJsonFile(final String fileName, Collection<?> booksInGenre) {
         final StringBuilder uniqueFileName = new StringBuilder();
@@ -36,7 +35,7 @@ public class Utils {
                 .append(".json");
         try {
             final Gson gson = new Gson();
-            final Path dataDir = Path.of(DATA_DIR).toAbsolutePath();
+            final Path dataDir = Path.of(DATA_STORE).toAbsolutePath();
             final Path path = Paths.get(dataDir + File.separator + uniqueFileName);
             if(!Files.exists(dataDir)) {
                 Files.createDirectory(dataDir);

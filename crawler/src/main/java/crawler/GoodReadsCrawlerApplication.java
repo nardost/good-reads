@@ -48,6 +48,15 @@ public class GoodReadsCrawlerApplication {
         writeJsonFile("", books);
     }
 
+    /**
+     * Parses program arguments.
+     *   1st argument = arg[0]: the input file
+     *   2nd argument = arg[1]: limit to the id stream
+     *   3rd argument = arg[2]: maximum tolerable number of http errors (throttling)
+     *   4th argument = arg[3]: number of download worker threads
+     *
+     * @param args program argument list
+     */
     private static void parseProgramArgs(final String[] args) {
         if(args.length == 0) {
             throw new RuntimeException("Input file is not provided.");
