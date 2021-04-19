@@ -1,4 +1,4 @@
-package crawler;
+package crawler.genre;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;

@@ -1,5 +1,7 @@
-package crawler;
+package crawler.book;
 
+import crawler.Author;
+import crawler.Book;
 import lombok.AllArgsConstructor;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -7,8 +9,10 @@ import org.jsoup.nodes.Document;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -32,7 +36,7 @@ public class BookIdProducer implements Runnable {
                     final Book b = new Book();
                     final List<String> listOfGenres = new ArrayList<>();
                     listOfGenres.add(genre);
-                    b.setGenres(listOfGenres);
+                    //b.setGenres(listOfGenres);
                     b.setId(e.select("div.elementList div.stars").attr("data-resource-id"));
                     b.setPath(e.select("div.elementList a").get(0).attr("href"));
                     final Author a = new Author();

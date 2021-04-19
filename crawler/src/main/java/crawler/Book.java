@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -15,7 +16,7 @@ public class Book {
     private String id;
     private String title;
     private String path;
-    private List<String> genres;
+    private Set<String> genres;
     private String thumbnail;
     private String blurb;
     private int pages;

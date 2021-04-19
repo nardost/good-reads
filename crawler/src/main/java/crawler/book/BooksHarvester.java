@@ -1,4 +1,6 @@
-package crawler;
+package crawler.book;
+
+import crawler.Book;
 
 import java.util.ArrayList;
 import java.util.List;

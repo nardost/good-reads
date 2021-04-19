@@ -37,6 +37,6 @@ task fatJar(type: Jar) {
         configurations.runtimeClasspath.findAll {it.name.endsWith('jar') }.collect { zipTree(it) }
     }
     manifest {
-        attributes 'Main-Class':'crawler.BooksHarvester'
+        attributes 'Main-Class':'crawler.id.Main'
     }
 }

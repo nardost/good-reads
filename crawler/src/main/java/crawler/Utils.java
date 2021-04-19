@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -24,7 +25,7 @@ public class Utils {
     public static final int THREAD_NAME_COL_WIDTH = 15;
     public static final String DATA_DIR = "GOOD_READS_DATA";
 
-    public static void writeJsonFile(final String fileName, List<?> booksInGenre) {
+    public static void writeJsonFile(final String fileName, Collection<?> booksInGenre) {
         final StringBuilder uniqueFileName = new StringBuilder();
         uniqueFileName.append(fileName)
                 .append("_")
