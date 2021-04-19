@@ -2,6 +2,7 @@ package crawler;
 
 import crawler.book.BookDownloader;
 import crawler.book.BookIdSource;
+import crawler.book.Harvest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,24 +27,32 @@ public class GoodReadsCrawlerApplication {
 
         parseProgramArgs(args);
 
+        log("Previously harvested books: " + Harvest.getHarvestedBooks().size());
+        log("Previously harvested thumbnails: " + Harvest.getHarvestedThumbnails().size());
+
         final Set<Book> books = new ConcurrentSkipListSet<>();
         final BlockingQueue<String> idPipe = new ArrayBlockingQueue<>(100);
         final BlockingQueue<String> authorPipe = new ArrayBlockingQueue<>(100);
         final CountDownLatch downloaderDone = new CountDownLatch(numberOfDownloaders);
 
         final List<Runnable> workers = new ArrayList<>();
-        workers.add(new BookIdSource(sourceFile, idPipe));
+        final BookIdSource source = new BookIdSource(sourceFile, idPipe);
+        workers.add(source);
         IntStream.range(0, numberOfDownloaders)
                 .mapToObj(i -> new BookDownloader(idPipe, authorPipe, books, downloaderDone))
                 .forEach(workers::add);
 
-        log(workers.size() + " threads");
+        log(workers.size() + " worker threads running");
         final ExecutorService executor = Executors.newFixedThreadPool(workers.size());
         workers.forEach(executor::execute);
         executor.shutdown();
 
         log("Waiting for book downloader threads to terminate");
         downloaderDone.await();
+        /*
+         * Cancel the id pump thread. It might be blocking on the queue.
+         */
+        source.cancel();
         log("Writing " + books.size() + " books to file...");
         writeJsonFile("", books);
     }

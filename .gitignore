@@ -41,7 +41,7 @@ bin/
 .vscode/
 
 ### Specific to this Project
-GOOD_READS_DATA/
+DATA/
 
 ### Exclude unused modules
 id/

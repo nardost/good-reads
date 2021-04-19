@@ -35,7 +35,7 @@ public class Utils {
                 .append(".json");
         try {
             final Gson gson = new Gson();
-            final Path dataDir = Path.of(DATA_STORE).toAbsolutePath();
+            final Path dataDir = Path.of(DATA_STORE + File.separator + "books").toAbsolutePath();
             final Path path = Paths.get(dataDir + File.separator + uniqueFileName);
             if(!Files.exists(dataDir)) {
                 Files.createDirectory(dataDir);

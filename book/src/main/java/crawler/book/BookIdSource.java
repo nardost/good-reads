@@ -7,8 +7,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.IntStream;
 
 import static crawler.Utils.log;
@@ -18,13 +20,20 @@ import static crawler.Parameters.numberOfDownloaders;
 
 public class BookIdSource implements Runnable {
 
-    private final BufferedReader reader;
+    private final BufferedReader sourceReader;
     private final BlockingQueue<String> queue;
+    private final Set<String> alreadyHarvestedBooks;
+    private final Set<String> alreadyHarvestedThumbnails;
+
+    private final AtomicBoolean cancel;
 
     public BookIdSource(final String sourceFile, final BlockingQueue<String> queue) {
         try {
-            this.reader = Files.newBufferedReader(Paths.get(sourceFile));
+            this.sourceReader = Files.newBufferedReader(Paths.get(sourceFile));
             this.queue = queue;
+            alreadyHarvestedBooks = Harvest.getHarvestedBooks();
+            alreadyHarvestedThumbnails = Harvest.getHarvestedThumbnails();
+            this.cancel = new AtomicBoolean(false);
         } catch (IOException ioe) {
             throw new RuntimeException("I/O exception while reading " + sourceFile);
         }
@@ -33,11 +42,15 @@ public class BookIdSource implements Runnable {
     @Override
     public void run() {
         final Gson gson = new Gson();
-        final Set<String> ids = gson.fromJson(reader, new TypeToken<Set<String>>() {}.getType());
+        final Set<String> ids = gson.fromJson(sourceReader, new TypeToken<Set<String>>() {}.getType());
         ids.stream().limit(idStreamLimit).forEach(id -> {
+            if(cancel.get()) {
+                return;
+            }
             try {
-                queue.put(id);
-                log("Enqueued book id " + id);
+                if(!alreadyHarvestedBooks.contains(id)) {
+                    queue.put(id);
+                }
             } catch (InterruptedException ignored) {
             }
         });
@@ -51,5 +64,10 @@ public class BookIdSource implements Runnable {
             }
         });
         log("Terminating...");
+    }
+
+    public void cancel() {
+        this.cancel.set(true);
+        queue.drainTo(new ArrayList<>());
     }
 }
