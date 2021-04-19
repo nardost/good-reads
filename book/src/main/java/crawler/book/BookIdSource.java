@@ -22,8 +22,6 @@ public class BookIdSource implements Runnable {
 
     private final BufferedReader sourceReader;
     private final BlockingQueue<String> queue;
-    private final Set<String> alreadyHarvestedBooks;
-    private final Set<String> alreadyHarvestedThumbnails;
 
     private final AtomicBoolean cancel;
 
@@ -31,8 +29,6 @@ public class BookIdSource implements Runnable {
         try {
             this.sourceReader = Files.newBufferedReader(Paths.get(sourceFile));
             this.queue = queue;
-            alreadyHarvestedBooks = Harvest.getHarvestedBooks();
-            alreadyHarvestedThumbnails = Harvest.getHarvestedThumbnails();
             this.cancel = new AtomicBoolean(false);
         } catch (IOException ioe) {
             throw new RuntimeException("I/O exception while reading " + sourceFile);
@@ -48,7 +44,7 @@ public class BookIdSource implements Runnable {
                 return;
             }
             try {
-                if(!alreadyHarvestedBooks.contains(id)) {
+                if(!Harvest.getHarvestedBooks().contains(id)) {
                     queue.put(id);
                 }
             } catch (InterruptedException ignored) {
