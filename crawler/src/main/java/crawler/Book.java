@@ -5,14 +5,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.List;
 import java.util.Set;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @ToString
-public class Book {
+public class Book implements Comparable<Book> {
     private String id;
     private String title;
     private String path;
@@ -21,4 +20,9 @@ public class Book {
     private String blurb;
     private int pages;
     private Author author;
+
+    @Override
+    public int compareTo(Book o) {
+        return Integer.compare(Integer.parseInt(this.id), Integer.parseInt(o.getId()));
+    }
 }
