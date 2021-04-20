@@ -5,7 +5,7 @@ public class Parameters {
     /**
      * Maximum number of ids pumped into the pipeline
      */
-    public static int idStreamLimit = 200;
+    public static int streamLimit = 200;
     /**
      * Number of scraper worker threads
      */

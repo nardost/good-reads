@@ -41,7 +41,7 @@ bin/
 .vscode/
 
 ### Specific to this Project
-DATA_old/
+DATA/
 
 ### Exclude unused modules
 id/

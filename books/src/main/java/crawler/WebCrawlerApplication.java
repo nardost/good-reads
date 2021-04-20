@@ -92,37 +92,44 @@ public class WebCrawlerApplication {
     /**
      * Parses program arguments.
      *   1st argument = arg[0]: the input file
-     *   2nd argument = arg[1]: limit to the id stream
-     *   3rd argument = arg[2]: maximum tolerable number of http errors (throttling)
-     *   4th argument = arg[3]: number of download worker threads
-     *   5th argument = arg[4]: number of times the program loops
+     *   2nd argument = arg[1]: maximum number of times the program loops
+     *   3rd argument = arg[2]: number of download worker threads
+     *   4th argument = arg[3]: maximum tolerable number of http errors (throttling)
+     *   5th argument = arg[4]: limit to the id stream
+     *
      *
      * @param args program argument list
      */
     private static void parseProgramArgs(final String[] args) {
+
         if(args.length == 0) {
             throw new RuntimeException("Input file is not provided.");
         }
         sourceFile = args[0];
+
         if(args.length == 1) {
             return;
         }
-        idStreamLimit = parseWithFallback(args[1], idStreamLimit);
+        maxNumberOfLoops = parseWithFallback(args[1], maxNumberOfLoops).intValue();
+
         if(args.length == 2) {
             return;
         }
-        maxTolerableHttpError = parseWithFallback(args[2], maxTolerableHttpError);
+        numberOfWorkerThreads = parseWithFallback(args[2], numberOfWorkerThreads).intValue();
+
         if(args.length == 3) {
             return;
         }
-        numberOfWorkerThreads = parseWithFallback(args[3], numberOfWorkerThreads);
+        maxTolerableHttpError = parseWithFallback(args[3], maxTolerableHttpError).intValue();
+
         if(args.length == 4) {
             return;
         }
-        maxNumberOfLoops = parseWithFallback(args[4], maxNumberOfLoops);
+        streamLimit = parseWithFallback(args[4], streamLimit).intValue();
+
     }
 
-    private static int parseWithFallback(final String arg, final int fallback) {
+    private static Number parseWithFallback(final String arg, final Number fallback) {
         try {
             return Integer.parseInt(arg);
         } catch (NumberFormatException ignored) {

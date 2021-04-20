@@ -14,7 +14,7 @@ import java.util.stream.IntStream;
 
 import static crawler.Utils.log;
 import static crawler.Parameters.POISON_PILL;
-import static crawler.Parameters.idStreamLimit;
+import static crawler.Parameters.streamLimit;
 import static crawler.Parameters.numberOfWorkerThreads;
 
 /**
@@ -42,7 +42,7 @@ public class BookIdSource implements Runnable {
     public void run() {
         final Gson gson = new Gson();
         final Set<String> ids = gson.fromJson(sourceReader, new TypeToken<Set<String>>() {}.getType());
-        ids.stream().limit(idStreamLimit).forEach(id -> {
+        ids.stream().limit(streamLimit).forEach(id -> {
             if(cancel.get()) {
                 return;
             }
