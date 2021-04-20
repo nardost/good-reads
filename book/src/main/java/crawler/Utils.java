@@ -17,6 +17,9 @@ import static java.nio.file.StandardOpenOption.APPEND;
 import static java.nio.file.StandardOpenOption.CREATE;
 import static java.nio.file.StandardOpenOption.WRITE;
 
+/**
+ * Utility methods like logging and file operations.
+ */
 public class Utils {
 
     /**

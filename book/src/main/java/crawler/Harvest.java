@@ -17,6 +17,10 @@ import static crawler.Parameters.BOOKS_DIR;
 import static crawler.Parameters.DATA_STORE;
 import static crawler.Parameters.THUMBNAILS_DIR;
 
+/**
+ * This class retrieves the list of books and
+ * thumbnails harvested in previous executions.
+ */
 public class Harvest {
 
     private static final Gson gson = new Gson();

@@ -18,14 +18,18 @@ import static crawler.Parameters.POISON_PILL;
 import static crawler.Parameters.idStreamLimit;
 import static crawler.Parameters.numberOfDownloaders;
 
-public class BookIdPump implements Runnable {
+/**
+ * A Runnable that pumps book ids into the pipeline.
+ * Producer
+ */
+public class BookIdSource implements Runnable {
 
     private final BufferedReader sourceReader;
     private final BlockingQueue<String> queue;
 
     private final AtomicBoolean cancel;
 
-    public BookIdPump(final String sourceFile, final BlockingQueue<String> queue) {
+    public BookIdSource(final String sourceFile, final BlockingQueue<String> queue) {
         try {
             this.sourceReader = Files.newBufferedReader(Paths.get(sourceFile));
             this.queue = queue;

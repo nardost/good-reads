@@ -27,15 +27,14 @@ public class GoodReadsCrawlerApplication {
         log("Previously harvested thumbnails: " + Harvest.getHarvestedThumbnails().size());
 
         final Set<Book> books = new ConcurrentSkipListSet<>();
-        final BlockingQueue<String> idPipe = new ArrayBlockingQueue<>(100);
-        final BlockingQueue<String> authorPipe = new ArrayBlockingQueue<>(100);
-        final CountDownLatch downloaderDone = new CountDownLatch(numberOfDownloaders);
+        final BlockingQueue<String> queue = new ArrayBlockingQueue<>(100);
+        final CountDownLatch doneSignal = new CountDownLatch(numberOfDownloaders);
 
         final List<Runnable> workers = new ArrayList<>();
-        final BookIdPump source = new BookIdPump(sourceFile, idPipe);
+        final BookIdSource source = new BookIdSource(sourceFile, queue);
         workers.add(source);
         IntStream.range(0, numberOfDownloaders)
-                .mapToObj(i -> new BookFilter(idPipe, authorPipe, books, downloaderDone))
+                .mapToObj(i -> new BookCollector(queue, books, doneSignal))
                 .forEach(workers::add);
 
         log(workers.size() + " worker threads running");
@@ -44,7 +43,7 @@ public class GoodReadsCrawlerApplication {
         executor.shutdown();
 
         log("Waiting for book downloader threads to terminate");
-        downloaderDone.await();
+        doneSignal.await();
         /*
          * Cancel the id pump thread. It might be blocking on the queue.
          */

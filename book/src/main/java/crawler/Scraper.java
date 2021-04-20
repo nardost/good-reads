@@ -29,6 +29,12 @@ import static crawler.Utils.log;
 
 public class Scraper {
 
+    /**
+     * Scarp book detail
+     * @param id book id
+     * @param forbiddenCount atomic-int to used to abort when remote throttles
+     * @return Book with detailed info
+     */
     public static Book downloadBook(final String id, final AtomicInteger forbiddenCount) {
         final Book book = new Book();
         final String bookUrl = "https://www.goodreads.com/book/show/" + id;
@@ -86,6 +92,12 @@ public class Scraper {
         return book;
     }
 
+    /**
+     * Download thumbnail
+     * @param thumbnail URL of thumbnail
+     * @param id book id
+     * @throws IOException
+     */
     public static void downloadThumbnail(final String thumbnail, final String id) throws IOException {
         final URL url = new URL(thumbnail);
         final String extension = "." + thumbnail.substring(thumbnail.lastIndexOf('.') + 1);

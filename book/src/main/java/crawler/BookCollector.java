@@ -13,11 +13,14 @@ import static crawler.Utils.log;
 import static crawler.Parameters.POISON_PILL;
 import static crawler.Parameters.maxTolerableHttpError;
 
+/**
+ * Consumer
+ * Consumes the stream of book ids and scrapes for detailed book info.
+ */
 @AllArgsConstructor
-public class BookFilter implements Runnable {
+public class BookCollector implements Runnable {
 
     private final BlockingQueue<String> input;
-    private final BlockingQueue<String> output;
     private final Set<Book> books;
     private final CountDownLatch done;
 
