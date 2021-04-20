@@ -1,4 +1,4 @@
-package crawler.book;
+package crawler;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -13,7 +13,9 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static crawler.Parameters.BOOKS_DIR;
 import static crawler.Parameters.DATA_STORE;
+import static crawler.Parameters.THUMBNAILS_DIR;
 
 public class Harvest {
 
@@ -21,7 +23,7 @@ public class Harvest {
 
     public static Set<String> getHarvestedBooks() {
         final Set<Book> harvestedBooks = new HashSet<>();
-        final Path booksDataDir = Path.of(DATA_STORE + File.separator + "books").toAbsolutePath();
+        final Path booksDataDir = Path.of(DATA_STORE + File.separator + BOOKS_DIR).toAbsolutePath();
         if(Files.exists(booksDataDir) && Files.isDirectory(booksDataDir)) {
             try {
                 Files.walk(booksDataDir).filter(path -> !Files.isDirectory(path)).map(path -> {
@@ -42,7 +44,7 @@ public class Harvest {
     public static Set<String> getHarvestedThumbnails() {
 
         Set<String> harvestedThumbnails = new HashSet<>();
-        final Path thumbnailsDataDir = Path.of(DATA_STORE + File.separator + "thumbnails").toAbsolutePath();
+        final Path thumbnailsDataDir = Path.of(DATA_STORE + File.separator + THUMBNAILS_DIR).toAbsolutePath();
 
         if(Files.exists(thumbnailsDataDir) && Files.isDirectory(thumbnailsDataDir)) {
             try {

@@ -11,6 +11,7 @@ import java.util.Collection;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+import static crawler.Parameters.BOOKS_DIR;
 import static crawler.Parameters.DATA_STORE;
 import static java.nio.file.StandardOpenOption.APPEND;
 import static java.nio.file.StandardOpenOption.CREATE;
@@ -35,7 +36,7 @@ public class Utils {
                 .append(".json");
         try {
             final Gson gson = new Gson();
-            final Path dataDir = Path.of(DATA_STORE + File.separator + "books").toAbsolutePath();
+            final Path dataDir = Path.of(DATA_STORE + File.separator + BOOKS_DIR).toAbsolutePath();
             final Path path = Paths.get(dataDir + File.separator + uniqueFileName);
             if(!Files.exists(dataDir)) {
                 Files.createDirectories(dataDir);

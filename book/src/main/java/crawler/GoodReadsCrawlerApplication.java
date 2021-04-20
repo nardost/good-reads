@@ -1,9 +1,5 @@
 package crawler;
 
-import crawler.book.BookDownloader;
-import crawler.book.BookIdSource;
-import crawler.book.Harvest;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -36,10 +32,10 @@ public class GoodReadsCrawlerApplication {
         final CountDownLatch downloaderDone = new CountDownLatch(numberOfDownloaders);
 
         final List<Runnable> workers = new ArrayList<>();
-        final BookIdSource source = new BookIdSource(sourceFile, idPipe);
+        final BookIdPump source = new BookIdPump(sourceFile, idPipe);
         workers.add(source);
         IntStream.range(0, numberOfDownloaders)
-                .mapToObj(i -> new BookDownloader(idPipe, authorPipe, books, downloaderDone))
+                .mapToObj(i -> new BookFilter(idPipe, authorPipe, books, downloaderDone))
                 .forEach(workers::add);
 
         log(workers.size() + " worker threads running");

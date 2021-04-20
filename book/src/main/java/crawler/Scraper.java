@@ -1,4 +1,4 @@
-package crawler.book;
+package crawler;
 
 import crawler.Author;
 import crawler.Book;
@@ -8,15 +8,26 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URL;
+import java.nio.channels.Channels;
+import java.nio.channels.FileChannel;
+import java.nio.channels.ReadableByteChannel;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
+import static crawler.Parameters.DATA_STORE;
+import static crawler.Parameters.THUMBNAILS_DIR;
 import static crawler.Utils.log;
 
-public class Crawler {
+public class Scraper {
 
     public static Book downloadBook(final String id, final AtomicInteger forbiddenCount) {
         final Book book = new Book();
@@ -38,13 +49,23 @@ public class Crawler {
 
                 final String dataTextId = l.select("div#description a").attr("data-text-id");
                 book.setBlurb(l.select("span#freeText" + dataTextId).text());
-
+                /*
+                 * Multiple authors
+                 */
                 final String pages = l.selectFirst("div#details div.row").getElementsByAttributeValue("itemprop", "numberOfPages").text();
                 book.setPages(Integer.parseInt(pages.replaceAll("[\\sa-zA-Z]", "")));
+                final Set<Author> authors = l.selectFirst("div#bookAuthors").select("a.authorName").stream()
+                        .map(a -> {
+                            final Author author = new Author();
+                            final String authorName = a.select("span").text();
+                            final String authorPath = a.attr("href");
+                            author.setName(authorName);
+                            author.setPath(authorPath);
+                            author.setId(authorPath.substring(authorPath.lastIndexOf('/') + 1).split("\\.")[0]);
+                            return author;
+                        }).collect(Collectors.toSet());
 
-                final Author author = new Author();
-                author.setPath(l.selectFirst("div#bookAuthors").selectFirst("a.authorName").attr("href"));
-                book.setAuthor(author);
+                book.setAuthors(authors);
 
                 final Set<String> genres = new HashSet<>();
                 final Element r = document.selectFirst("div.rightContainer");
@@ -65,7 +86,17 @@ public class Crawler {
         return book;
     }
 
-    public static Author downloadAuthor(final String author) {
-        return null;
+    public static void downloadThumbnail(final String thumbnail, final String id) throws IOException {
+        final URL url = new URL(thumbnail);
+        final String extension = "." + thumbnail.substring(thumbnail.lastIndexOf('.') + 1);
+        final Path thumbnailsDir = Path.of(DATA_STORE + File.separator + THUMBNAILS_DIR).toAbsolutePath();
+        if(!Files.exists(thumbnailsDir)) {
+            Files.createDirectories(thumbnailsDir);
+        }
+        final Path thumbnailPath = Path.of(thumbnailsDir + File.separator + id + extension).toAbsolutePath();
+        final ReadableByteChannel readableByteChannel = Channels.newChannel(url.openStream());
+        final FileOutputStream fileOutputStream = new FileOutputStream(thumbnailPath.toFile());
+        final FileChannel fileChannel = fileOutputStream.getChannel();
+        fileChannel.transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
     }
 }

@@ -1,6 +1,5 @@
-package crawler.book;
+package crawler;
 
-import crawler.Book;
 import lombok.AllArgsConstructor;
 
 import java.io.IOException;
@@ -15,7 +14,7 @@ import static crawler.Parameters.POISON_PILL;
 import static crawler.Parameters.maxTolerableHttpError;
 
 @AllArgsConstructor
-public class BookDownloader implements Runnable {
+public class BookFilter implements Runnable {
 
     private final BlockingQueue<String> input;
     private final BlockingQueue<String> output;
@@ -36,7 +35,7 @@ public class BookDownloader implements Runnable {
                     break;
                 }
 
-                final Book book = Crawler.downloadBook(id, forbiddenCount);
+                final Book book = Scraper.downloadBook(id, forbiddenCount);
 
                 if(forbiddenCount.get() > maxTolerableHttpError) {
                     log("Remote is throttling requests...");
@@ -46,10 +45,7 @@ public class BookDownloader implements Runnable {
                 if(Objects.nonNull(book.getId())) {
                     books.add(book);
                     log(book.getId() + " added to collection");
-
-                    ThumbnailGetter.downloadThumbnail(book.getThumbnail(), book.getId());
-
-                    output.put(book.getAuthor().getPath());
+                    Scraper.downloadThumbnail(book.getThumbnail(), book.getId());
                 }
             } catch (InterruptedException ignored) {
                 log("Interrupted....");

@@ -14,13 +14,11 @@ import java.util.Set;
 public class Book implements Comparable<Book> {
     private String id;
     private String title;
-    private String path;
+    private Set<Author> authors;
     private Set<String> genres;
-    private String thumbnail;
     private String blurb;
     private int pages;
-    private Author author;
-
+    private String thumbnail;
     @Override
     public int compareTo(Book o) {
         return Integer.compare(Integer.parseInt(this.id), Integer.parseInt(o.getId()));

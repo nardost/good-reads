@@ -8,4 +8,6 @@ public class Parameters {
     public static int maxTolerableHttpError = 10;
 
     public static final String DATA_STORE = "DATA";
+    public static final String BOOKS_DIR = "books";
+    public static final String THUMBNAILS_DIR = "thumbnails";
 }

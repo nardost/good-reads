@@ -1,4 +1,4 @@
-package crawler.book;
+package crawler;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -18,14 +18,14 @@ import static crawler.Parameters.POISON_PILL;
 import static crawler.Parameters.idStreamLimit;
 import static crawler.Parameters.numberOfDownloaders;
 
-public class BookIdSource implements Runnable {
+public class BookIdPump implements Runnable {
 
     private final BufferedReader sourceReader;
     private final BlockingQueue<String> queue;
 
     private final AtomicBoolean cancel;
 
-    public BookIdSource(final String sourceFile, final BlockingQueue<String> queue) {
+    public BookIdPump(final String sourceFile, final BlockingQueue<String> queue) {
         try {
             this.sourceReader = Files.newBufferedReader(Paths.get(sourceFile));
             this.queue = queue;
