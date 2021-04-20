@@ -11,15 +11,19 @@ The executable jar file will be in book/build/libs. You can move this jar file a
 
 ```markdown
 ### Running the Executable (macOS/Linux)
-$ java -jar book-1.0-SNAPSHOT-uber.jar /path/to/id_source_file.json id_stream_limit throttle_limit n_threads
+$ java -jar book-1.0-SNAPSHOT-uber.jar /path/to/id_source_file.json id_stream_limit max_forbidden n_threads
 
-Where:
+Where,
    /path/to/id_source_file.json is the path to the id source file assigned to you.
-   id_stream_limit is the maximum number of book ids you want to pump into the pipeline
-   n_threads is the number of book scraper (worker) threads
+   id_stream_limit (defaults to 200) is the maximum number of book ids you want to pump into the pipeline
+   max_forbidden (defaults to 10) is the maximum number of forbidden responses (403) before aborting (when the remote throttles...)
+   n_threads (defaults to 3) is the number of book scraper (worker) threads
+```
+The only required program argument is the id source JSON file. You can use the default values for the other 3 arguments, or you may supply them to experiment...
 
 Example:
 
+```markdown
 $ java -jar book-1.0-SNAPSHOT-uber.jar ./nardos_ffd6b834c7b94385a12dad1b03b744fb.json 1000 10 5
 ```
 
