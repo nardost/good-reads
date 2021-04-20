@@ -76,15 +76,17 @@ public class WebCrawlerApplication {
             books.clear();
             queue.clear();
 
-            /*
-             * Random duration of time to sleep
-             */
-            final long delay = ThreadLocalRandom.current()
-                    .longs(minSleepTimeInSeconds, maxSleepTimeInSeconds)
-                    .findFirst()
-                    .orElse(600L);
-            log("Sleeping for " + delay + " seconds ...");
-            TimeUnit.SECONDS.sleep(delay);
+            if(round + 1 < maxNumberOfLoops) {
+                /*
+                 * Random duration of time to sleep
+                 */
+                final long delay = ThreadLocalRandom.current()
+                        .longs(minSleepTimeInSeconds, maxSleepTimeInSeconds)
+                        .findFirst()
+                        .orElse(600L);
+                log("Sleeping for " + delay + " seconds ...");
+                TimeUnit.SECONDS.sleep(delay);
+            }
         } while (round++ < maxNumberOfLoops);
         log("Program is terminating ...");
     }

@@ -19,6 +19,7 @@ public class Book implements Comparable<Book> {
     private String blurb;
     private int pages;
     private String thumbnail;
+    private String published;
 
     @Override
     public int compareTo(Book o) {

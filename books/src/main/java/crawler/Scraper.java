@@ -46,19 +46,31 @@ public class Scraper {
             }
             final Document document = connection.get();
             if(Objects.nonNull(document)) {
-                final Element l = document.selectFirst("div.leftContainer div#topcol");
+
                 book.setId(id);
+
+                final Element l = document.selectFirst("div.leftContainer div#topcol");
+
                 book.setTitle(l.selectFirst("h1#bookTitle").text());
+
                 book.setThumbnail(l.selectFirst("div#imagecol div.bookCoverPrimary img#coverImage").attr("src"));
 
                 final String dataTextId = l.select("div#description a").attr("data-text-id");
                 book.setBlurb(l.select("span#freeText" + dataTextId).text());
-                /*
-                 * Multiple authors
-                 */
+
                 final String pages = l.selectFirst("div#details div.row").getElementsByAttributeValue("itemprop", "numberOfPages").text();
                 book.setPages(Integer.parseInt(pages.replaceAll("[\\sa-zA-Z]", "")));
-                final Set<Author> authors = l.selectFirst("div#bookAuthors").select("a.authorName").stream()
+
+                final String published = l.select("div#details div.row")
+                        .stream()
+                        .filter(e -> !e.getElementsContainingText("Published").isEmpty())
+                        .findFirst()
+                        .map(Element::text)
+                        .orElse("");
+                book.setPublished(published.replace("Published ", "").split(" by ")[0]);
+
+                final Set<Author> authors = l.selectFirst("div#bookAuthors").select("a.authorName")
+                        .stream()
                         .map(a -> {
                             final Author author = new Author();
                             final String authorName = a.select("span").text();
@@ -68,12 +80,11 @@ public class Scraper {
                             author.setId(authorPath.substring(authorPath.lastIndexOf('/') + 1).split("\\.")[0]);
                             return author;
                         }).collect(Collectors.toSet());
-
                 book.setAuthors(authors);
 
-                final Set<String> genres = new HashSet<>();
                 final Element r = document.selectFirst("div.rightContainer");
                 if("Genres".equals(r.select("div.stacked h2 a").text())) {
+                    final Set<String> genres = new HashSet<>();
                     r.select("div.elementList")
                             .forEach(e -> e.select("div.left a")
                                     .forEach(a -> genres.add(a.text())));
