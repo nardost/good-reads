@@ -1,0 +1,31 @@
+plugins {
+    id 'java'
+}
+
+group = 'edu.depaul.good-reads-scraper'
+version = '1.0.0'
+sourceCompatibility = 11
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.jsoup:jsoup:1.13.1'
+    implementation 'org.projectlombok:lombok:1.18.18'
+    implementation 'com.google.code.gson:gson:2.8.6'
+    compileOnly 'org.projectlombok:lombok:1.18.20'
+    annotationProcessor 'org.projectlombok:lombok:1.18.20'
+}
+
+task uberJar(type: Jar) {
+    archivesBaseName = 'good-reads-crawler'
+    from sourceSets.main.output
+    dependsOn configurations.runtimeClasspath
+    from {
+        configurations.runtimeClasspath.findAll {it.name.endsWith('jar') }.collect { zipTree(it) }
+    }
+    manifest {
+        attributes 'Main-Class':'crawler.WebCrawlerApplication'
+    }
+}
