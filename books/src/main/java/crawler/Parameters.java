@@ -5,7 +5,7 @@ public class Parameters {
     /**
      * Maximum number of ids pumped into the pipeline
      */
-    public static int streamLimit = 1000;
+    public static int streamLimit = 6000;
     /**
      * Number of scraper worker threads
      */
@@ -25,11 +25,11 @@ public class Parameters {
     /**
      * The minimum duration of time in seconds program sleeps between rounds
      */
-    public static long minSleepTimeInSeconds = 120L;
+    public static long minSleepTimeInSeconds = 600L;
     /**
      * The maximum duration of time in seconds program sleeps between rounds
      */
-    public static long maxSleepTimeInSeconds = 300L;
+    public static long maxSleepTimeInSeconds = 1800L;
 
     /**
      * Id value that signals the end of the id stream to Runnable consumers downstream

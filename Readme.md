@@ -11,7 +11,7 @@ The executable jar file will be in book/build/libs. You can move this jar file a
 ```markdown
 ### Running the Executable (macOS/Linux)
 
-$ java -jar good-reads-crawler-1.0.0.jar /path/to/id_source_file.json [loops] [n_threads] [max_forbidden] [ id_stream_limit]
+$ java -jar good-reads-crawler-1.0.3.jar /path/to/id_source_file.json [loops] [n_threads] [max_forbidden] [ id_stream_limit]
 ```
 ### Program Argument List (in that order)
 
@@ -29,13 +29,13 @@ The only required program argument is the id source JSON file.
 
 ```markdown
 - program uses default parameters
-$ java -jar good-reads-crawler-1.0.0.jar ./nardos_ffd6b834c7b94385a12dad1b03b744fb.json
+$ java -jar good-reads-crawler-1.0.3.jar ./nardos_ffd6b834c7b94385a12dad1b03b744fb.json
 
 - program loops for a maximum of 100 rounds.
-$ java -jar good-reads-crawler-1.0.0.jar ./nardos_ffd6b834c7b94385a12dad1b03b744fb.json 100
+$ java -jar good-reads-crawler-1.0.3.jar ./nardos_ffd6b834c7b94385a12dad1b03b744fb.json 100
 
 - Program loops for a maximum of 100 rounds and 3 worker threads are spawned.
-  $ java -jar good-reads-crawler-1.0.0.jar ./nardos_ffd6b834c7b94385a12dad1b03b744fb.json 100 3
+  $ java -jar good-reads-crawler-1.0.3.jar ./nardos_ffd6b834c7b94385a12dad1b03b744fb.json 100 3
 ```
 
 The program will create a directory structure under the current directory where it saves the thumbnails and the json files.

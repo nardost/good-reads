@@ -26,7 +26,7 @@ public class Utils {
      * Global constants
      */
     public static final long PROGRAM_START_TIME = System.currentTimeMillis();
-    public static final int THREAD_NAME_COL_WIDTH = 15;
+    public static final int THREAD_NAME_COL_WIDTH = 16;
 
     public static void writeJsonFile(final String fileName, Collection<?> booksInGenre) {
         final StringBuilder uniqueFileName = new StringBuilder();
@@ -65,6 +65,6 @@ public class Utils {
         final String threadName = Thread.currentThread().getName();
 
         final String colFormat = "%1$" + THREAD_NAME_COL_WIDTH + "s";
-        System.out.printf("[%s:%s:%s.%s] %s:  %s%n", hh, mm, ss, ms, String.format(colFormat, threadName), message);
+        System.out.printf("[%s:%s:%s.%s] %s: %s%n", hh, mm, ss, ms, String.format(colFormat, threadName), message);
     }
 }
