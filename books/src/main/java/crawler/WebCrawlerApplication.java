@@ -67,8 +67,10 @@ public class WebCrawlerApplication {
              */
             source.cancel();
 
-            log("Writing " + books.size() + " books to file...");
-            writeJsonFile("", books);
+            if(!books.isEmpty()) {
+                log("Writing " + books.size() + " books to file...");
+                writeJsonFile("", books);
+            }
 
             /*
              * Reuse collections instead of creating new on every iteration.
