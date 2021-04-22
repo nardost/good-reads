@@ -25,14 +25,16 @@ public class BookIdSource implements Runnable {
 
     private final BufferedReader sourceReader;
     private final BlockingQueue<String> queue;
+    private final Harvest harvest;
 
     private final AtomicBoolean cancel;
 
-    public BookIdSource(final String sourceFile, final BlockingQueue<String> queue) {
+    public BookIdSource(final String sourceFile, final BlockingQueue<String> queue, Harvest harvest) {
         try {
             this.sourceReader = Files.newBufferedReader(Paths.get(sourceFile));
             this.queue = queue;
             this.cancel = new AtomicBoolean(false);
+            this.harvest = harvest;
         } catch (IOException ioe) {
             throw new RuntimeException("I/O exception while reading " + sourceFile);
         }
@@ -47,15 +49,14 @@ public class BookIdSource implements Runnable {
                 return;
             }
             try {
-                if(!Harvest.getHarvestedBooks().contains(id)) {
+                if(!harvest.containsBook(id)) {
                     queue.put(id);
                 }
             } catch (InterruptedException ignored) {
             }
         });
-        /*
-         * One poison pill for each downloader
-         */
+
+        // One poison pill for each downloader
         IntStream.range(0, numberOfWorkerThreads).forEach(i -> {
             try {
                 queue.put(POISON_PILL);

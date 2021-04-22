@@ -34,13 +34,10 @@ public class WebCrawlerApplication {
                 log("Round " + round + " of " + maxNumberOfLoops);
             }
 
-            final int previouslyHarvestedBooks = Harvest.getHarvestedBooks().size();
-            final int previouslyHarvestedThumbnails = Harvest.getHarvestedThumbnails().size();
-
-            log("Previously harvested books: " + previouslyHarvestedBooks);
-            log("Previously harvested thumbnails: " + previouslyHarvestedThumbnails);
-
-            if(previouslyHarvestedBooks >= downloadGoal) {
+            final Harvest harvest = new Harvest();
+            log("Previously harvested books:      " + harvest.booksCount());
+            log("Previously harvested thumbnails: " + harvest.thumbnailsCount());
+            if(harvest.booksCount() >= downloadGoal) {
                 log("Download goal has been reached.");
                 break;
             }
@@ -48,23 +45,21 @@ public class WebCrawlerApplication {
             final CountDownLatch doneSignal = new CountDownLatch(numberOfWorkerThreads);
 
             final List<Runnable> workers = new ArrayList<>();
-            final BookIdSource source = new BookIdSource(sourceFile, queue);
+            final BookIdSource source = new BookIdSource(sourceFile, queue, harvest);
             workers.add(source);
             IntStream.range(0, numberOfWorkerThreads)
                     .mapToObj(i -> new BookInfoCollector(queue, books, doneSignal))
                     .forEach(workers::add);
-
-            log(workers.size() + " worker threads running");
             final ExecutorService executor = Executors.newFixedThreadPool(workers.size());
             workers.forEach(executor::execute);
+            log(workers.size() + " worker threads running");
             executor.shutdown();
 
-            log("Waiting for book downloader threads to terminate");
+            log("Waiting for book downloader threads to terminate...");
             doneSignal.await();
+            log("All book downloader threads terminated...");
 
-            /*
-             * Cancel the id pump thread. It might be blocking on the queue.
-             */
+            // Cancel the id pump thread. It might be blocking on the queue.
             source.cancel();
 
             if(!books.isEmpty()) {
@@ -72,16 +67,13 @@ public class WebCrawlerApplication {
                 writeJsonFile("", books);
             }
 
-            /*
-             * Reuse collections instead of creating new on every iteration.
-             */
+            // Reuse collections instead of creating new on every round.
             books.clear();
             queue.clear();
 
             if(round + 1 < maxNumberOfLoops) {
-                /*
-                 * Random duration of time to sleep
-                 */
+
+                // Random duration of time to sleep
                 final long delay = ThreadLocalRandom.current()
                         .longs(minSleepTimeInSeconds, maxSleepTimeInSeconds)
                         .findFirst()

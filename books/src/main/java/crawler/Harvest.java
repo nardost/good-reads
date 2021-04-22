@@ -22,9 +22,41 @@ import static crawler.Parameters.THUMBNAILS_DIR;
  */
 public class Harvest {
 
+    private final Set<String> alreadyHarvestedBooks;
+    private final Set<String> alreadyHarvestedThumbnails;
+
     private static final Gson gson = new Gson();
 
-    public static Set<String> getHarvestedBooks() {
+    public Harvest() {
+        this.alreadyHarvestedBooks = getHarvestedBooks();
+        this.alreadyHarvestedThumbnails = getHarvestedThumbnails();
+    }
+
+    public Set<String> getAlreadyHarvestedBooks() {
+        return alreadyHarvestedBooks;
+    }
+
+    public Set<String> getAlreadyHarvestedThumbnails() {
+        return alreadyHarvestedThumbnails;
+    }
+
+    public int booksCount() {
+        return alreadyHarvestedBooks.size();
+    }
+
+    public int thumbnailsCount() {
+        return alreadyHarvestedThumbnails.size();
+    }
+
+    public boolean containsBook(final String id) {
+        return this.alreadyHarvestedBooks.contains(id);
+    }
+
+    public boolean containsThumbnail(final String id) {
+        return this.alreadyHarvestedThumbnails.contains(id);
+    }
+
+    private static Set<String> getHarvestedBooks() {
         final Set<Book> harvestedBooks = new HashSet<>();
         final Path booksDataDir = Path.of(DATA_STORE + File.separator + BOOKS_DIR).toAbsolutePath();
         if(Files.exists(booksDataDir) && Files.isDirectory(booksDataDir)) {
@@ -44,7 +76,7 @@ public class Harvest {
         return harvestedBooks.stream().map(Book::getId).collect(Collectors.toSet());
     }
 
-    public static Set<String> getHarvestedThumbnails() {
+    private static Set<String> getHarvestedThumbnails() {
 
         Set<String> harvestedThumbnails = new HashSet<>();
         final Path thumbnailsDataDir = Path.of(DATA_STORE + File.separator + THUMBNAILS_DIR).toAbsolutePath();
