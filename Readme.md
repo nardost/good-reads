@@ -1,6 +1,6 @@
 ### System Diagram
 
-![System Diagram](/docs/images/system.png)
+![System Diagram](/docs/images/system-diagram.png)
 
 ### Running the Crawler
 
