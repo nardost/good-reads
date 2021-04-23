@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
 
 import static crawler.Parameters.DATA_STORE;
 import static crawler.Parameters.THUMBNAILS_DIR;
-import static crawler.Utils.log;
 
 public class Scraper {
 
