@@ -1,3 +1,7 @@
+### System Diagram
+
+![System Diagram](/docs/images/system.png)
+
 ### Running the Crawler
 
 ```markdown
